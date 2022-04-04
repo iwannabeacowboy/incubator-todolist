@@ -1,8 +1,11 @@
 import React from 'react';
+import {FilterValuesType} from './App';
 
-type TodoListPropsType = {
+type TodoListType = {
     title: string
     tasks: Array<TaskType>
+    removeTask: (taskID: number) => void
+    changeFilter: (filter: FilterValuesType) => void
 }
 export type TaskType = {
     id: number
@@ -10,7 +13,7 @@ export type TaskType = {
     isDone: boolean
 }
 
-export const TodoList = ({title, tasks}: TodoListPropsType) => {
+export const TodoList: React.FC<TodoListType> = ({title, tasks, removeTask, changeFilter}) => {
     return (
         <div>
             <h3>{title}</h3>
@@ -19,23 +22,20 @@ export const TodoList = ({title, tasks}: TodoListPropsType) => {
                 <button>+</button>
             </div>
             <ul>
-                <li>
-                    <input type="checkbox" checked={tasks[0].isDone}/>
-                    <span>{tasks[0].title}</span>
-                </li>
-                <li>
-                    <input type="checkbox" checked={tasks[1].isDone}/>
-                    <span>{tasks[1].title}</span>
-                </li>
-                <li>
-                    <input type="checkbox" checked={tasks[2].isDone}/>
-                    <span>{tasks[2].title}</span>
-                </li>
+                {tasks.map((t) => {
+                    return (
+                        <li key={t.id}>
+                            <input type="checkbox" checked={t.isDone} readOnly/>
+                            {/*- readOnly*/}
+                            <span>{t.title}</span>
+                            <button onClick={() => removeTask(t.id)}>x</button>
+                        </li>)
+                })}
             </ul>
             <div>
-                <button>All</button>
-                <button>Active</button>
-                <button>Completed</button>
+                <button onClick={() => changeFilter('all')}>All</button>
+                <button onClick={() => changeFilter('active')}>Active</button>
+                <button onClick={() => changeFilter('completed')}>Completed</button>
             </div>
         </div>
     );
