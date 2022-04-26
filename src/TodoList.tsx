@@ -2,13 +2,15 @@ import React, {KeyboardEvent, ChangeEvent, useState} from 'react';
 import {FilterValuesType} from './App';
 
 type TodoListType = {
+    todoListID: string
     title: string
     tasks: Array<TaskType>
     filter: FilterValuesType
-    removeTask: (taskID: string) => void
-    addTask: (title: string) => void
-    changeFilter: (filter: FilterValuesType) => void
-    changeTaskStatus: (taskID: string, isDone: boolean) => void
+    removeTask: (todoListID: string, taskID: string) => void
+    addTask: (todoListID: string, title: string) => void
+    changeFilter: (todoListID: string, filter: FilterValuesType) => void
+    changeTaskStatus: (todoListID: string, taskID: string, isDone: boolean) => void
+    removeTodoList: (todoListID: string) => void
 }
 export type TaskType = {
     id: string
@@ -17,13 +19,15 @@ export type TaskType = {
 }
 
 export const TodoList: React.FC<TodoListType> = ({
+                                                     todoListID,
                                                      title,
                                                      tasks,
                                                      filter,
                                                      removeTask,
                                                      addTask,
                                                      changeFilter,
-                                                     changeTaskStatus
+                                                     changeTaskStatus,
+                                                     removeTodoList
                                                  }) => {
 
     const [error, setError] = useState<boolean>(false)
@@ -33,7 +37,7 @@ export const TodoList: React.FC<TodoListType> = ({
     const addTaskHandler = () => {
         const trimmedTitle = titleValue.trim();
         if (!!trimmedTitle) {
-            addTask(trimmedTitle);
+            addTask(todoListID, trimmedTitle);
             setTitleValue('');
         } else {
             setError(true)
@@ -51,7 +55,11 @@ export const TodoList: React.FC<TodoListType> = ({
     }
 
     const onClickFilterHandler = (filter: FilterValuesType) => {
-        return () => changeFilter(filter)
+        return () => changeFilter(todoListID, filter)
+    }
+
+    const removeTodoListHandler = () => {
+        removeTodoList(todoListID)
     }
 
     const getTasksForRender = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
@@ -72,8 +80,11 @@ export const TodoList: React.FC<TodoListType> = ({
 
     const tasksListItems = tasksForRender.length
         ? tasksForRender.map(t => {
-            const onClickHandler = () => removeTask(t.id)
-            const onChangeStatus = (e: ChangeEvent<HTMLInputElement>) => changeTaskStatus(t.id, e.currentTarget.checked)
+            const onClickHandler = () => removeTask(todoListID, t.id)
+            const onChangeStatus = (e: ChangeEvent<HTMLInputElement>) => {
+                return (
+                    changeTaskStatus(todoListID, t.id, e.currentTarget.checked))
+            }
             const taskTitleClass = t.isDone ? 'is-done' : '';
             return (
                 <li key={t.id}>
@@ -97,7 +108,10 @@ export const TodoList: React.FC<TodoListType> = ({
     return (
         <div>
 
-            <h3>{title}</h3>
+            <h3>
+                {title}
+                <button onClick={removeTodoListHandler}>x</button>
+            </h3>
 
             <div>
                 <input
