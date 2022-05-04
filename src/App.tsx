@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import './App.css';
 import {TaskType, TodoList} from './TodoList';
 import {v1} from 'uuid';
+import {FullInput} from './components/FullInput';
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
-
 type TodoListsType = {
     id: string
     title: string
@@ -20,7 +20,6 @@ function App() {
         {id: todolistID1, title: 'What to learn', filter: 'all'},
         {id: todolistID2, title: 'What to buy', filter: 'all'},
     ])
-
     const [tasks, setTasks] = useState({
         [todolistID1]: [
             {id: v1(), title: 'HTML&CSS', isDone: true},
@@ -46,10 +45,17 @@ function App() {
         setTasks({...tasks, [todoListID]: tasks[todoListID].filter(t => t.id !== taskID)})
     }
 
-    const addTask = (todoListID: string, title: string) => {
+    const addTodoList = (newTitle: string) => {
+        const newID = v1()
+        const newTodoList: TodoListsType = {id: newID, title: newTitle, filter: 'all'}
+        setTodoLists([...todoLists, newTodoList])
+        setTasks({...tasks, [newID]: []})
+    }
+
+    const addTask = (todoListID: string, newTitle: string) => {
         const newTask: TaskType = {
             id: v1(),
-            title: title,
+            title: newTitle,
             isDone: false
         }
         setTasks({...tasks, [todoListID]: [newTask, ...tasks[todoListID]]})
@@ -63,8 +69,18 @@ function App() {
         setTodoLists(todoLists.map(tl => tl.id === todoListID ? {...tl, filter: filter} : tl))
     }
 
+    const editTodoList = (todoListID: string, newTitle: string) => {
+        setTodoLists(todoLists.map(el => el.id === todoListID ? {...el, title: newTitle} : el))
+    }
+
+    const editTask = (todoListID: string, taskID: string, newTitle: string) => {
+        setTasks({...tasks, [todoListID]: tasks[todoListID].map(el => el.id === taskID ? {...el, title: newTitle} : el)})
+    }
+
     return (
         <div className="App">
+
+            <FullInput callBack={addTodoList}/>
 
             {todoLists.map(tl => {
                 return (
@@ -79,6 +95,8 @@ function App() {
                         changeFilter={changeFilter}
                         changeTaskStatus={changeTaskStatus}
                         removeTodoList={removeTodoList}
+                        editTodoList={editTodoList}
+                        editTask={editTask}
                     />
                 )
             })}
