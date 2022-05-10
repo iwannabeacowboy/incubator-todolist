@@ -30,16 +30,15 @@ export const FullInput: React.FC<FullInputType> = ({callBack}) => {
         }
     }
 
-    const inputClass = error ? 'error' : ''
-
     return (
         <div>
             <input
                 type="text" value={titleValue}
                 onChange={onChangeInputHandler}
                 onKeyPress={onKeyPressHandler}
-                className={inputClass}
+                className={error ? 'error' : ''}
             />
+
             <button onClick={addTaskHandler}>+</button>
             {error && <div className={'error-message'}>Title is required</div>}
         </div>

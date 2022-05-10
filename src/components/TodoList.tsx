@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from 'react';
-import {FilterValuesType} from './App';
-import {FullInput} from './components/FullInput';
-import {EditableSpan} from './components/EditableSpan';
+import {FilterValuesType, TaskType} from '../App';
+import {FullInput} from './FullInput';
+import {EditableSpan} from './EditableSpan';
 
 type TodoListType = {
     todoListID: string
@@ -15,11 +15,6 @@ type TodoListType = {
     removeTodoList: (todoListID: string) => void
     editTodoList: (todoListID: string, newTitle: string) => void
     editTask: (todoListID: string, taskID: string, newTitle: string) => void
-}
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
 }
 
 export const TodoList: React.FC<TodoListType> = ({
@@ -35,30 +30,6 @@ export const TodoList: React.FC<TodoListType> = ({
                                                      editTodoList,
                                                      editTask
                                                  }) => {
-
-    // const [error, setError] = useState<boolean>(false)
-
-    // const [titleValue, setTitleValue] = useState<string>('');
-
-    // const addTaskHandler = () => {
-    //     const trimmedTitle = titleValue.trim();
-    //     if (!!trimmedTitle) {
-    //         addTask(todoListID, trimmedTitle);
-    //         setTitleValue('');
-    //     } else {
-    //         setError(true)
-    //     }
-    // }
-    // const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    //     if (e.key === 'Enter') {
-    //         addTaskHandler();
-    //     }
-    // }
-
-    // const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    //     setTitleValue(e.currentTarget.value);
-    //     if (error) setError(false)
-    // }
 
     const onClickFilterHandler = (filter: FilterValuesType) => {
         return () => changeFilter(todoListID, filter)
@@ -76,7 +47,7 @@ export const TodoList: React.FC<TodoListType> = ({
         editTodoList(todoListID, newTitle)
     }
 
-    const getTasksForRender = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
+    const getFilteredTasks = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
         let tasksForRender: Array<TaskType>
         switch (filter) {
             case 'active':
@@ -91,10 +62,10 @@ export const TodoList: React.FC<TodoListType> = ({
         return tasksForRender
     }
 
-    const tasksForRender = getTasksForRender(tasks, filter)
+    const filteredTasks = getFilteredTasks(tasks, filter)
 
-    const tasksListItems = tasksForRender.length
-        ? tasksForRender.map(t => {
+    const tasksListItems = filteredTasks.length
+        ? filteredTasks.map(t => {
 
             const onClickHandler = () => removeTask(todoListID, t.id)
             const onChangeStatus = (e: ChangeEvent<HTMLInputElement>) => {
@@ -114,13 +85,13 @@ export const TodoList: React.FC<TodoListType> = ({
                         checked={t.isDone}
                         onChange={onChangeStatus}
                     />
+
                     <EditableSpan
                         className={taskTitleClass}
                         title={t.title}
                         callBack={editTaskHandler}
                     />
-                    {/*<span className={taskTitleClass}>{t.title}</span>*/}
-                    <button onClick={onClickHandler}>x</button>
+                    <button onClick={onClickHandler}> x </button>
                 </li>
             )
         })
@@ -141,22 +112,12 @@ export const TodoList: React.FC<TodoListType> = ({
                 callBack={addTaskHandler}
             />
 
-            {/*<div>*/}
-            {/*    <input*/}
-            {/*        type="text" value={titleValue}*/}
-            {/*        onChange={onChangeInputHandler}*/}
-            {/*        onKeyPress={onKeyPressHandler}*/}
-            {/*        className={inputClass}*/}
-            {/*    />*/}
-            {/*    <button onClick={addTaskHandler}>+</button>*/}
-            {/*    {error && <div className={'error-message'}>Title is required</div>}*/}
-            {/*</div>*/}
-
             <ul>
                 {tasksListItems}
             </ul>
 
             <div>
+
                 <button
                     className={allBtnClass}
                     onClick={onClickFilterHandler('all')}>All
@@ -169,6 +130,7 @@ export const TodoList: React.FC<TodoListType> = ({
                     className={completedBtnClass}
                     onClick={onClickFilterHandler('completed')}>Completed
                 </button>
+
             </div>
 
         </div>
