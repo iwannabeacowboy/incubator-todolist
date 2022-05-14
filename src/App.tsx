@@ -2,7 +2,15 @@ import React, {useReducer} from 'react';
 import {TodoList} from './components/TodoList';
 import {v1} from 'uuid';
 import {FullInput} from './components/FullInput';
-import {addEmptyAC, addTaskAC, changeTaskStatusAC, editTaskAC, removeTaskAC, tasksReducer} from './state/tasksReducer';
+import {
+    addEmptyAC,
+    addTaskAC,
+    changeTaskStatusAC,
+    deleteTasksAC,
+    editTaskAC,
+    removeTaskAC,
+    tasksReducer
+} from './state/tasksReducer';
 import {
     addTodoListAC,
     changeFilterAC,
@@ -53,7 +61,7 @@ function App() {
 
     const removeTodoList = (todolistID: string) => {
         todoListsDispatch(removeTodoListAC(todolistID))
-        delete tasks[todolistID]
+        tasksDispatch(deleteTasksAC(todolistID))
     }
 
     const addTodoList = (newTitle: string) => {
@@ -121,4 +129,3 @@ function App() {
 }
 
 export default App;
-
