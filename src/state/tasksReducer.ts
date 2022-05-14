@@ -1,6 +1,6 @@
 import {TasksType, TaskType} from '../App';
 
-type tasksReducerType = removeTaskACType | addTaskACType | changeTaskStatusType | editTaskType | addEmptyType
+type tasksReducerType = removeTaskAType | addTaskAType | changeTaskStatusAType | editTaskAType | addEmptyAType
 export const tasksReducer = (state: TasksType, action: tasksReducerType) => {
     switch (action.type) {
         case 'REMOVE-TASK': {
@@ -40,7 +40,7 @@ export const tasksReducer = (state: TasksType, action: tasksReducerType) => {
     }
 }
 
-type removeTaskACType = ReturnType<typeof removeTaskAC>
+type removeTaskAType = ReturnType<typeof removeTaskAC>
 export const removeTaskAC = (todoListID: string, taskID: string) => {
     return {
         type: 'REMOVE-TASK',
@@ -51,7 +51,7 @@ export const removeTaskAC = (todoListID: string, taskID: string) => {
     } as const
 }
 
-type addTaskACType = ReturnType<typeof addTaskAC>
+type addTaskAType = ReturnType<typeof addTaskAC>
 export const addTaskAC = (todoListID: string, newTask: TaskType) => {
     return {
         type: 'ADD-TASK',
@@ -62,7 +62,7 @@ export const addTaskAC = (todoListID: string, newTask: TaskType) => {
     } as const
 }
 
-type changeTaskStatusType = ReturnType<typeof changeTaskStatusAC>
+type changeTaskStatusAType = ReturnType<typeof changeTaskStatusAC>
 export const changeTaskStatusAC = (todoListID: string, taskID: string, isDone: boolean) => {
     return {
         type: 'CHANGE-STATUS',
@@ -74,7 +74,7 @@ export const changeTaskStatusAC = (todoListID: string, taskID: string, isDone: b
     } as const
 }
 
-type editTaskType = ReturnType<typeof editTaskAC>
+type editTaskAType = ReturnType<typeof editTaskAC>
 export const editTaskAC = (todoListID: string, taskID: string, newTitle: string) => {
     return {
         type: 'EDIT-TASK',
@@ -86,7 +86,7 @@ export const editTaskAC = (todoListID: string, taskID: string, newTitle: string)
     } as const
 }
 
-type addEmptyType = ReturnType<typeof addEmptyAC>
+type addEmptyAType = ReturnType<typeof addEmptyAC>
 export const addEmptyAC = (newID: string) => {
     return {
         type: 'ADD-EMPTY',
