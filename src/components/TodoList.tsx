@@ -1,7 +1,8 @@
-import React, {ChangeEvent} from 'react';
+import React from 'react';
 import {FilterValuesType, TaskType} from '../App';
 import {FullInput} from './FullInput';
 import {EditableSpan} from './EditableSpan';
+import {Checkbox} from './Checkbox';
 
 type TodoListType = {
     todoListID: string
@@ -68,9 +69,8 @@ export const TodoList: React.FC<TodoListType> = ({
         ? filteredTasks.map(t => {
 
             const onClickHandler = () => removeTask(todoListID, t.id)
-            const onChangeStatus = (e: ChangeEvent<HTMLInputElement>) => {
-                return (
-                    changeTaskStatus(todoListID, t.id, e.currentTarget.checked))
+            const onChangeStatus = (checked: boolean) => {
+                changeTaskStatus(todoListID, t.id, checked)
             }
             const editTaskHandler = (newTitle: string) => {
                 editTask(todoListID, t.id, newTitle)
@@ -80,18 +80,14 @@ export const TodoList: React.FC<TodoListType> = ({
 
             return (
                 <li key={t.id}>
-                    <input
-                        type="checkbox"
-                        checked={t.isDone}
-                        onChange={onChangeStatus}
-                    />
+                    <Checkbox isDone={t.isDone} callBack={onChangeStatus}/>
 
                     <EditableSpan
                         className={taskTitleClass}
                         title={t.title}
                         callBack={editTaskHandler}
                     />
-                    <button onClick={onClickHandler}> x </button>
+                    <button onClick={onClickHandler}> x</button>
                 </li>
             )
         })

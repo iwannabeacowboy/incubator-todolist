@@ -1,6 +1,12 @@
 import {TasksType, TaskType} from '../App';
 
-type TasksReducerType = RemoveTaskAType | AddTaskAType | ChangeTaskStatusAType | EditTaskAType | AddEmptyAType | DeleteTasksType
+type TasksReducerType =
+    RemoveTaskAType
+    | AddTaskAType
+    | ChangeTaskStatusAType
+    | EditTaskAType
+    | AddEmptyAType
+    | DeleteTasksType
 export const tasksReducer = (state: TasksType, action: TasksReducerType) => {
     switch (action.type) {
         case 'REMOVE-TASK': {
@@ -36,8 +42,9 @@ export const tasksReducer = (state: TasksType, action: TasksReducerType) => {
             return {...state, [action.payload.newID]: []}
         }
         case 'DELETE-TASKS':
-            delete state[action.payload.todoListID]
-            return state
+            const copyState = {...state};
+            delete copyState[action.payload.todoListID]
+            return copyState
         default:
             return state
     }

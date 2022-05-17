@@ -10,14 +10,14 @@ import {
     editTaskAC,
     removeTaskAC,
     tasksReducer
-} from './state/tasksReducer';
+} from './state/tasks-reducer';
 import {
     addTodoListAC,
     changeFilterAC,
     editTodoListAC,
     removeTodoListAC,
     todoListReducer
-} from './state/todoListReducer';
+} from './state/todoList-reducer';
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 export type TodoListsType = {
