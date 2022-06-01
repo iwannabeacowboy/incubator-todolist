@@ -2,15 +2,7 @@ import React, {useReducer} from 'react';
 import {TodoList} from './components/TodoList';
 import {v1} from 'uuid';
 import {FullInput} from './components/FullInput';
-import {
-    addEmptyAC,
-    addTaskAC,
-    changeTaskStatusAC,
-    deleteTasksAC,
-    editTaskAC,
-    removeTaskAC,
-    tasksReducer
-} from './state/tasks-reducer';
+import {addTaskAC, changeTaskStatusAC, editTaskAC, removeTaskAC, tasksReducer} from './state/tasks-reducer';
 import {
     addTodoListAC,
     changeFilterAC,
@@ -20,7 +12,7 @@ import {
 } from './state/todoList-reducer';
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
-export type TodoListsType = {
+export type TodoListType = {
     id: string
     title: string
     filter: FilterValuesType
@@ -59,16 +51,16 @@ function App() {
         ]
     });
 
-    const removeTodoList = (todolistID: string) => {
-        todoListsDispatch(removeTodoListAC(todolistID))
-        tasksDispatch(deleteTasksAC(todolistID))
+    const removeTodoList = (todoListID: string) => {
+        const removeTodoListAction = removeTodoListAC(todoListID)
+        todoListsDispatch(removeTodoListAction)
+        tasksDispatch(removeTodoListAction)
     }
 
     const addTodoList = (newTitle: string) => {
-        const newID = v1()
-        const newTodoList: TodoListsType = {id: newID, title: newTitle, filter: 'all'}
-        todoListsDispatch(addTodoListAC(newTodoList))
-        tasksDispatch(addEmptyAC(newID))
+        const addTodoListAction = addTodoListAC(newTitle)
+        todoListsDispatch(addTodoListAction)
+        tasksDispatch(addTodoListAction)
     }
 
     const changeFilter = (todoListID: string, filter: FilterValuesType) => {
@@ -84,12 +76,7 @@ function App() {
     }
 
     const addTask = (todoListID: string, newTitle: string) => {
-        const newTask: TaskType = {
-            id: v1(),
-            title: newTitle,
-            isDone: false
-        }
-        tasksDispatch(addTaskAC(todoListID, newTask))
+        tasksDispatch(addTaskAC(todoListID, newTitle))
     }
 
     const changeTaskStatus = (todoListID: string, taskID: string, isDone: boolean) => {
