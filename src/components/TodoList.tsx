@@ -1,38 +1,38 @@
-import React from 'react';
+import React, {memo, useCallback} from 'react';
 import {FilterValuesType, TaskType, TodoListType} from '../App';
 import {FullInput} from './FullInput';
 import {EditableSpan} from './EditableSpan';
-import {Checkbox} from './Checkbox';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootStateType} from '../state/store';
-import {addTaskAC, changeTaskStatusAC, editTaskAC, removeTaskAC} from '../state/tasks-reducer';
+import {addTaskAC} from '../state/tasks-reducer';
 import {changeFilterAC, editTodoListAC, removeTodoListAC} from '../state/todoLists-reducer';
+import {Task} from './Task';
 
-type PropsType = {
+type TodoListPropsType = {
     todoList: TodoListType
 }
 
-export const TodoList: React.FC<PropsType> = ({todoList}) => {
+export const TodoList = memo(({todoList}: TodoListPropsType) => {
 
     const tasks = useSelector<RootStateType, TaskType[]>(state => state.tasks[todoList.id])
 
     const dispatch = useDispatch()
 
-    const onClickFilterHandler = (filter: FilterValuesType) => {
+    const onClickFilterHandler = useCallback((filter: FilterValuesType) => {
         return () => dispatch(changeFilterAC(todoList.id, filter))
-    }
+    }, [todoList.id])
 
     const removeTodoListHandler = () => {
         dispatch(removeTodoListAC(todoList.id))
     }
 
-    const addTaskHandler = (newTitle: string) => {
-        dispatch(addTaskAC(todoList.id, newTitle))
-    }
-
-    const editTodoListHandler = (newTitle: string) => {
+    const editTodoListHandler = useCallback((newTitle: string) => {
         dispatch(editTodoListAC(todoList.id, newTitle))
-    }
+    }, [todoList.id])
+
+    const addTaskHandler = useCallback((newTitle: string) => {
+        dispatch(addTaskAC(todoList.id, newTitle))
+    }, [todoList.id])
 
     let filteredTasks: TaskType[]
     switch (todoList.filter) {
@@ -45,34 +45,6 @@ export const TodoList: React.FC<PropsType> = ({todoList}) => {
         default:
             filteredTasks = tasks
     }
-
-    const tasksListItems = filteredTasks.length
-        ? filteredTasks.map(t => {
-
-            const onClickHandler = () => dispatch(removeTaskAC(todoList.id, t.id))
-            const onChangeStatus = (isDone: boolean) => {
-                dispatch(changeTaskStatusAC(todoList.id, t.id, isDone))
-            }
-            const editTaskHandler = (newTitle: string) => {
-                dispatch(editTaskAC(todoList.id, t.id, newTitle))
-            }
-
-            const taskTitleClass = t.isDone ? 'is-done' : '';
-
-            return (
-                <li key={t.id}>
-                    <Checkbox isDone={t.isDone} callBack={onChangeStatus}/>
-
-                    <EditableSpan
-                        className={taskTitleClass}
-                        title={t.title}
-                        callBack={editTaskHandler}
-                    />
-                    <button onClick={onClickHandler}> x</button>
-                </li>
-            )
-        })
-        : <span>Nothing to see</span>
 
     const allBtnClass = todoList.filter === 'all' ? 'active-filter' : '';
     const activeBtnClass = todoList.filter === 'active' ? 'active-filter' : ''
@@ -90,7 +62,16 @@ export const TodoList: React.FC<PropsType> = ({todoList}) => {
             />
 
             <ul>
-                {tasksListItems}
+                {filteredTasks.length ? filteredTasks.map(t => {
+                        return (
+                            <Task
+                                task={t}
+                                todoListID={todoList.id}
+                                key={t.id}
+                            />
+                        )
+                    })
+                    : <span>Nothing to see</span>}
             </ul>
 
             <div>
@@ -112,6 +93,5 @@ export const TodoList: React.FC<PropsType> = ({todoList}) => {
 
         </div>
     );
-};
-
+});
 

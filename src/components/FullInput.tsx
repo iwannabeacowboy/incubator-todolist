@@ -1,10 +1,10 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 
-type FullInputType = {
+type FullInputPropsType = {
     callBack: (title: string) => void
 }
 
-export const FullInput: React.FC<FullInputType> = ({callBack}) => {
+export const FullInput = memo(({callBack}: FullInputPropsType) => {
 
     const [titleValue, setTitleValue] = useState<string>('');
     const [error, setError] = useState<boolean>(false)
@@ -43,4 +43,4 @@ export const FullInput: React.FC<FullInputType> = ({callBack}) => {
             {error && <div className={'error-message'}>Title is required</div>}
         </div>
     );
-};
+});

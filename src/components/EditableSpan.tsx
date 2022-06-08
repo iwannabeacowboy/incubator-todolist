@@ -1,12 +1,12 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 
-type EditableSpanType = {
+type EditableSpanPropsType = {
     title: string
     callBack: (newTitle: string) => void
     className?: string
 }
 
-export const EditableSpan: React.FC<EditableSpanType> = ({title, callBack, className}) => {
+export const EditableSpan = memo(({title, callBack, className}:EditableSpanPropsType) => {
 
     const [edit, setEdit] = useState<boolean>(false)
     const [newTitle, setNewTitle] = useState<string>(title);
@@ -20,6 +20,12 @@ export const EditableSpan: React.FC<EditableSpanType> = ({title, callBack, class
         callBack(newTitle)
     }
 
+    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            onDoubleClickHandler()
+        }
+    }
+
     return (
         edit ?
             <input
@@ -27,6 +33,7 @@ export const EditableSpan: React.FC<EditableSpanType> = ({title, callBack, class
                 value={newTitle}
                 onChange={onChangeInputHandler}
                 onBlur={onDoubleClickHandler}
+                onKeyPress={onKeyPressHandler}
                 autoFocus
             /> :
             <span
@@ -36,4 +43,4 @@ export const EditableSpan: React.FC<EditableSpanType> = ({title, callBack, class
                 {title}
             </span>
     );
-};
+});

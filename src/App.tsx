@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {TodoList} from './components/TodoList';
 import {FullInput} from './components/FullInput';
 import {addTodoListAC} from './state/todoLists-reducer';
@@ -26,9 +26,9 @@ function App() {
 
     const dispatch = useDispatch()
 
-    const addTodoList = (newTitle: string) => {
+    const addTodoList = useCallback((newTitle: string) => {
         dispatch(addTodoListAC(newTitle))
-    }
+    }, [])
 
     return (
         <div className="App">
